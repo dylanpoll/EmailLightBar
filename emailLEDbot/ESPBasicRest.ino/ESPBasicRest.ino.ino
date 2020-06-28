@@ -10,8 +10,8 @@ Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 
 AsyncWebServer server(80);    //server port
 
-const char *ssid = "NHK at 2.4";
-const char *password = "AnimeIsGay69!";
+const char *ssid = "";
+const char *password = "";
 
 void notFound(AsyncWebServerRequest *request)
 {
