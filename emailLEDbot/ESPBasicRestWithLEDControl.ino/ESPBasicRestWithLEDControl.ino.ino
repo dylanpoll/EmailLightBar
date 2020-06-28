@@ -1,40 +1,60 @@
+// This Project was put togethar by Dylan M. Poll
+// Linkdin : https://www.linkedin.com/in/dylan-poll-4a324a1a2/
+// GitHub : https://github.com/dylanpoll
+// with the intent to create a email notification system
+// that will allow people to catagorize emails by color and iterate by inflow of unread emails.
+// this used NeoPixelBus because the esp32 has some issues with fast.led and the normal neopixel libraries.
 #include <Arduino.h>
 #include <WiFi.h>
-#include <ESPAsyncWebServer.h>
+#include <ESPAsyncWebServer.h>            // https://github.com/me-no-dev/ESPAsyncWebServer         
 #include "AsyncJson.h"
-#include "ArduinoJson.h"
-#include <Adafruit_NeoPixel.h>
-#define PIN        18 // On Trinket or Gemma, suggest changing this to 1
-#define NUMPIXELS 140 // Popular NeoPixel ring size
-Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
+#include "ArduinoJson.h"                  // https://arduinojson.org
+AsyncWebServer server(80);                // server port
+const char *ssid = "";          // put your wifi name here
+const char *password = "";   // put your wifi password here
 
-AsyncWebServer server(80);    //server port
+#include <NeoPixelBus.h>                  // https://github.com/Makuna/NeoPixelBus
+const uint16_t PixelCount = 140;          // this example assumes 4 pixels, making it smaller will cause a failure
+const uint8_t PixelPin = 18;              // make sure to set this to the correct pin, ignored for Esp8266
+#define colorSaturation 20                // this is treated as a brightness in my case
 
-const char *ssid = "";
-const char *password = "";
+NeoPixelBus<NeoGrbFeature, Neo800KbpsMethod> strip(PixelCount, PixelPin);
+RgbColor red(colorSaturation, 0, 0);
+RgbColor green(0, colorSaturation, 0);
+RgbColor blue(0, 0, colorSaturation);
+RgbColor purple(12, 0, 17);
+RgbColor white(colorSaturation);
+RgbColor black(0);
+HslColor hslRed(red);
+HslColor hslGreen(green);
+HslColor hslBlue(blue);
+HslColor hslWhite(white);
+HslColor hslBlack(black);
 
-void notFound(AsyncWebServerRequest *request)
-{
-  request->send(404, "application/json", "{\"message\":\"Not found\"}");
+void badGateWay(AsyncWebServerRequest *request) {
+  request->send(404, "application/json", "{\"404\":\"bad gateway\"}");
 }
-void setup()
-{
-  pixels.begin(); // INITIALIZE NeoPixel strip object (REQUIRED)   
-  Serial.begin(115200);
+
+void setup() {   
+  Serial.begin(115200);   //for the esp32
+  
+  strip.Begin();          //preps the LED strip
+  
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
   while (WiFi.waitForConnectResult() != WL_CONNECTED)
   {
-    Serial.printf("WiFi Failed!\n");
+    Serial.printf("WiFi Failed!\n");    //if this prints you have entered bad credentials above or have a whitelist on your network.
   }
   Serial.print("IP Address: ");
-  Serial.println(WiFi.localIP());
+  Serial.println(WiFi.localIP());     //this prints the devices sub IP address.
   
-  //the next part is the recieving post route used to take in JSON requests
-  //the POST route at current just echo's the content sent to it as is.
-  AsyncCallbackJsonWebHandler *handler = new AsyncCallbackJsonWebHandler("/post",//change this to your preffered route name
+  // the next part is the recieving post route used to take in JSON requests
+  // the POST route at current just echo's the content sent to it as is.
+  // the endpoint will be http://***.***.*.**/postLEDSchema just replace the astrisks with your devices sub IP address.
+  AsyncCallbackJsonWebHandler *postLEDSchema = new AsyncCallbackJsonWebHandler("/postLEDSchema",     //change this to your preffered route name
                                                                           [](AsyncWebServerRequest *request, JsonVariant &json) {
-    DynamicJsonDocument data(1500);
+    DynamicJsonDocument data(1500);                 //I used a DynamicJsonDocument because it can change size, but it is slower so consider static if you need speed.
     if (json.is<JsonArray>())
     {
       data = json.as<JsonArray>();
@@ -43,69 +63,48 @@ void setup()
     {
       data = json.as<JsonObject>();
     }
-    String response;
-    String respond;
-    serializeJson(data, response);  //pulling fields from a JSON object using this example would be done like ~Serial.println(data["sensor"].as<char*>());~
-    request->send(200, "application/json", response);
-    pixels.clear();
-     int numleds = (data["numleds"].as<int>());     //this makes scaling the amount easier as the data is a part of the JSON body.
-    for(int i = 0; i < numleds; i++){                          //if you change from num leds, account for 0 and make it <=
+    String testEcho;
+    serializeJson(data, testEcho);                                                  //pulling fields from a JSON object using this example would be done like ~Serial.println(data["sensor"].as<char*>());~
+    request->send(200, "application/json", testEcho);                               //this just echo's back the sent body, I used this to verify that the body was recieved correctly.
+    int numleds = (data["numleds"].as<int>());                                      //this makes scaling the amount easier as the data is a part of the JSON body.
+    for(int i = 0; i < numleds; i++){                                               //if you change from num leds, account for 0 and make it <=
                         String fieldName = "led";
-                        fieldName += i;                       //this adds the number for the schemaplacement
+                        fieldName += i;                                             //this adds the number for the schemaplacement
                         String diodeColor = "b";                                    //b will stand for black and fastled treats black as off
                         diodeColor = (data[fieldName].as<char*>());
                         //colors
-                        if(diodeColor == "b"){                                    
-                             pixels.setPixelColor(i, pixels.Color(0, 0, 0));                             //sets the color for led at position i
-                        }else 
                         if(diodeColor == "r"){
-                              pixels.setPixelColor(i, pixels.Color(20, 0, 0));     //Red;      
+                              strip.SetPixelColor(i, red);     
                         }else
                         if(diodeColor == "g"){
-                              pixels.setPixelColor(i, pixels.Color(i, 0, 0, 20));   // Green;      
+                              strip.SetPixelColor(i, green);   
                         }else 
                         if(diodeColor == "B"){
-                              pixels.setPixelColor(i, pixels.Color(i, 0, 20, 0));//Blue;      
-                        }else 
+                              strip.SetPixelColor(i, blue);      
+                        }else                    
                         if(diodeColor == "p"){
-                              pixels.setPixelColor(i, pixels.Color(i, 20, 0, 20));         //purple    
-                        }                                                       //this will "show" or light the LEDs according to our list above,
-                                                                   //putting this inside the for loop means it will update for each cycle through the loop
+                               strip.SetPixelColor(i, purple);
+                        }else
+                        if(diodeColor == "w"){
+                               strip.SetPixelColor(i, white);          
+                        }else 
+                        if(diodeColor == "b"){                                    
+                             strip.SetPixelColor(i, black);                             //sets the color for led at position i        
+                        }                                                               //this will "show" or light the LEDs according to our list above,
+                      strip.Show();                                                     //putting this inside the for loop means it will update for each cycle through the loop
                       delay(50);
                       }
-                      pixels.show();
+                     
   });
- server.addHandler(handler);
-  
-    server.onNotFound(notFound);  //user attempted a null route
-
-    
-  server.begin();
+  server.addHandler(postLEDSchema);   //adds the "handler" or "route" to the server
+  server.onNotFound(badGateWay);      //user attempted a null route
+  server.begin();                     //this needs to be put at the end of all routing
 }
-void loop()
-{
-/*  
- *   
-  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {             //this is creating the route used for GET requests sent to the ESP32
-    request->send(200, "application/json", "{\"message\":\"Welcome\"}");
-  });
-
-  
-  server.on("/get-message", HTTP_GET, [](AsyncWebServerRequest *request) {      //the actual route middlewares of the GET
-    StaticJsonDocument<100> data;
-    if (request->hasParam("message"))
-    {
-      data["message"] = request->getParam("message")->value();
-    }
-    else
-    {
-      data["message"] = "No message parameter";
-    }
-    String response;
-    serializeJson(data, response);
-    request->send(200, "application/json", response);
-  });
-  //JSON body to be sent
+void loop() {
+}
+/*
+  // JSON body to be sent
+  // this has a bunch of dummy values for testing, below this is a blank version.
            { 
             "numleds" : 30,
             "led0": "B",
@@ -168,7 +167,71 @@ void loop()
             "led57": "r",
             "led58": "r",
             "led59": "r",
-            "led60": "r"
+            "led60": "r",
+        }
+    //this one is all blank.
+        { 
+            "numleds" : ,
+            "led0": "",
+            "led1": "",
+            "led2": "",
+            "led3": "",
+            "led4": "",
+            "led5": "",
+            "led6": "",
+            "led7": "",
+            "led8": "",
+            "led9": "",
+            "led10": "",
+            "led11": "",
+            "led12": "",
+            "led13": "",
+            "led14": "",
+            "led15": "",
+            "led16": "",
+            "led17": "",
+            "led18": "",
+            "led19": "",
+            "led20": "",
+            "led21": "",
+            "led22": "",
+            "led23": "",
+            "led24": "",
+            "led25": "",
+            "led26": "",
+            "led27": "",
+            "led28": "",
+            "led29": "",
+            "led30": "",
+            "led31": "",
+            "led32": "",
+            "led33": "",
+            "led34": "",
+            "led35": "",
+            "led36": "",
+            "led37": "",
+            "led38": "",
+            "led39": "",
+            "led40": "",
+            "led41": "",
+            "led42": "",
+            "led43": "",
+            "led44": "",
+            "led45": "",
+            "led46": "",
+            "led47": "",
+            "led48": "",
+            "led49": "",
+            "led50": "",
+            "led51": "",
+            "led52": "",
+            "led53": "",
+            "led54": "",
+            "led55": "",
+            "led56": "",
+            "led57": "",
+            "led58": "",
+            "led59": "",
+            "led60": "",
         }
  */
-}
