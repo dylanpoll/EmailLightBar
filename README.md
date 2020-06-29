@@ -1,4 +1,6 @@
 # EmailLightBar
+this currently is being built, the only remaining issue is with the email scanning system. it is over scanning and erasing old results.
+<br> 
 this is a LED light bar that increments LEDs for designated senders and by designated colors for those senders. I use this for work and school to know when a important email has been sent.they need to be individually addressable.
 an example is...
 lets say you have a 10 LED strip, you start out with 1 unread designated email and it is red, the first LED on the strip turns on and is red.
