@@ -42,19 +42,19 @@ imap.once('ready', function () {
               do{                                                           
                 if (mail.text.includes(process.env.WORK_EMAIL)) {           //the value of WORK_EMAIL is pulled from the .env file 
                   i++                                                       // i will only grow when a email matching a sender is found because i
-                  console.log("for loop round " + totalEmails + " . i is at : " + i+ "found alorica");
+                  console.log("for loop round " + totalEmails + " . i is at : " + i+ "found work");
                   color = new String("\"led" + i+"\"" + " : \"r\"");               //constructs a portion of the JSON object
                   let newlength = colorSchemeArray.push(color);             //adds the color value to a array used to construct a JSON body when a match is found.
                 }                                                           // is used to limit the size of the json body to as many LEDs being used.
                 else if (mail.text.includes(process.env.SCHOOL_EMAIL)) {
                   i++
-                  console.log("for loop round " + totalEmails + " . i is at : " + i+ "found valencia");
+                  console.log("for loop round " + totalEmails + " . i is at : " + i+ "found school");
                   color = new String("\"led" + i+"\"" + " : \"B\"");
                   let newlength = colorSchemeArray.push(color);
                 }
                 else if (mail.text.includes(process.env.BILL_EMAIL)) {
                   i++
-                  console.log("for loop round " + totalEmails + " . i is at : " + i+ "found colonial pointe");
+                  console.log("for loop round " + totalEmails + " . i is at : " + i+ "found rent");
                   color = new String("\"led" + i+"\"" + " : \"g\"");
                   let newlength = colorSchemeArray.push(color);
                 }
