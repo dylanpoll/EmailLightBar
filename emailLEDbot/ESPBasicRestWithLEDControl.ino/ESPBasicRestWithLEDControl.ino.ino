@@ -63,9 +63,10 @@ void setup() {
     {
       data = json.as<JsonObject>();
     }
-    String testEcho;
+    //String testEcho;
     serializeJson(data, testEcho);                                                  //pulling fields from a JSON object using this example would be done like ~Serial.println(data["sensor"].as<char*>());~
-    request->send(200, "application/json", testEcho);                               //this just echo's back the sent body, I used this to verify that the body was recieved correctly.
+    request->send(200, "application/json", "{\"Attempt\":\"Successful\"}"           //informs user of success
+    //request->send(200, "application/json", testEcho);                               //this just echo's back the sent body, I used this to verify that the body was recieved correctly.
     int numleds = (data["numleds"].as<int>());                                      //this makes scaling the amount easier as the data is a part of the JSON body.
     for(int i = 0; i < numleds; i++){                                               //if you change from num leds, account for 0 and make it <=
                         String fieldName = "led";
