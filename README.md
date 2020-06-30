@@ -5,6 +5,9 @@ I plan to work this from a ESP32 down to a ESP01 in the future.<br>
 and listening for windows push notifications and using those as ques for light animations<br>
 last future expansion will be to default back to the old LED scheme state after ending that animation, this will be done by recording the state and pushing the animation as a temporary state and setting it back to the original upon completion.<br>
 <br> 
+<br>
+to turn off the led strip all you need to do is send it a schema to turn all the lights black, this is how neopixel indicates "off"
+<br>
 this is a LED light bar that increments LEDs for designated senders and by designated colors for those senders. I use this for work and school to know when a important email has been sent.they need to be individually addressable.
 an example is...
 lets say you have a 10 LED strip, you start out with 1 unread designated email and it is red, the first LED on the strip turns on and is red.
