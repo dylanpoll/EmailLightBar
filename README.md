@@ -1,5 +1,8 @@
 # EmailLightBar
-this currently is being built, the only remaining issue is with the email scanning system. it is over scanning and erasing old results.
+this currently is being built, the only remaining issue is with the email scanning system. it is over scanning and erasing old results.<br>
+I plan to work this from a ESP32 down to a ESP01 in the future.<br>
+and listening for windows push notifications and using those as ques for light animations<br>
+last future expansion will be to default back to the old LED scheme state after ending that animation, this will be done by recording the state and pushing the animation as a temporary state and setting it back to the original upon completion.<br>
 <br> 
 this is a LED light bar that increments LEDs for designated senders and by designated colors for those senders. I use this for work and school to know when a important email has been sent.they need to be individually addressable.
 an example is...
