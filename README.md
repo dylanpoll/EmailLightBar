@@ -1,4 +1,5 @@
 # EmailLightBar
+![alt text](https://github.com/dylanpoll/EmailLightBar/blob/master/Untitled.png?raw=true)
 this currently is being built, the only remaining issue is with the email scanning system. it is over scanning and erasing old results.<br>
 I plan to work this from a ESP32 down to a ESP01 in the future.<br>
 and listening for windows push notifications and using those as ques for light animations<br>
