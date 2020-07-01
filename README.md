@@ -28,3 +28,6 @@ BILL_EMAIL=<br>
 REST_SERVER=<br>
 ESP_IP=<br>
 DB_CONNECTION=<br>
+<br><br>
+the current plan for this design is as follows
+![alt text](https://github.com/dylanpoll/EmailLightBar/blob/master/lightbar%20displayed%20led%20scheme.png?raw=true)
