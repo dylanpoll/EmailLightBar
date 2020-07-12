@@ -1,3 +1,9 @@
+// This Project was put togethar by Dylan M. Poll
+// Linkdin : https://www.linkedin.com/in/dylan-poll-4a324a1a2/
+// GitHub : https://github.com/dylanpoll
+// with the intent to create a email notification system
+// that will allow people to catagorize emails by color and iterate by inflow of unread emails.
+// this used NeoPixelBus because the esp32 has some issues with fast.led and the normal neopixel libraries.
 #include <Arduino.h>
 #include <WiFi.h>
 #include <ESPAsyncWebServer.h>            // https://github.com/me-no-dev/ESPAsyncWebServer         
@@ -8,9 +14,9 @@ const char *ssid = "";          // put your wifi name here
 const char *password = "";   // put your wifi password here
 
 #include <NeoPixelBus.h>                  // https://github.com/Makuna/NeoPixelBus
-const uint16_t PixelCount = 140;          // this example assumes 4 pixels, making it smaller will cause a failure
+const uint16_t PixelCount = 140;        
 const uint8_t PixelPin = 18;              // make sure to set this to the correct pin, ignored for Esp8266
-#define colorSaturation 100                // this is treated as a brightness in my case...
+#define colorSaturation 100               // this is treated as a brightness in my case...
 
 NeoPixelBus<NeoGrbFeature, Neo800KbpsMethod> strip(PixelCount, PixelPin);
 RgbColor red(colorSaturation, 0, 0);
