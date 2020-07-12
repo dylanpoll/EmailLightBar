@@ -9,13 +9,13 @@ const espIP = process.env.ESP_IP;
 router.post('/', async (req, res) => {      //this will take a raw JSON body from the NodeMailer bot and turn it into a URL encode
   try {
     //console.log(req.body);                //uncomment to echo recieved JSON body in terminal
-    let subroute = "/postLEDSchema";
+    let subroute = "/postLEDSchema";        //the subroute used for this post
       const response = await fetch(espIP + subroute, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(req.body)
       });
-      res.json({"Attempt" : "Success"});   //waits for the response from the rest API 
+      res.json({"Attempt" : "Success"});   //waits for the response from the rest API on the espboard
   } catch (err) {
     res.json({"Attempt" : "Failure"});
   }
