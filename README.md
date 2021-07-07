@@ -1,4 +1,7 @@
 # EmailLightBar
+
+THIS PROJECT IS ON HIATUS AT THE MOMENT. The code that was originally being used for this I have been improving and using in my cloud controller project and have no immediate intention to work on the email bot at current. at the moment the API that was in this project is not anywhere near as usable as it is currently with the changes made in the new project. I plan to revise this soon and finalize the email bot and eventually factor that into the cloud controller project but also update this as a seperate entity so it can run stand alone. 
+
 ![alt text](https://github.com/dylanpoll/EmailLightBar/blob/master/Untitled.png?raw=true)
 this currently is being built, the only remaining issue is with the email scanning system. it is over scanning and erasing old results.<br>
 I plan to work this from a ESP32 down to a ESP01 in the future.<br>
