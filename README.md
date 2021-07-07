@@ -1,6 +1,7 @@
 # EmailLightBar
 
-THIS PROJECT IS ON HIATUS AT THE MOMENT. The code that was originally being used for this I have been improving and using in my cloud controller project and have no immediate intention to work on the email bot at current. at the moment the API that was in this project is not anywhere near as usable as it is currently with the changes made in the new project. I plan to revise this soon and finalize the email bot and eventually factor that into the cloud controller project but also update this as a seperate entity so it can run stand alone. 
+THIS PROJECT IS ON HIATUS AT THE MOMENT. 
+The code that was originally being used for this I have been improving and using in my cloud controller project and have no immediate intention to work on the email bot at current. at the moment the API that was in this project is not anywhere near as usable as it is currently with the changes made in the new project. I plan to revise this soon and finalize the email bot and eventually factor that into the cloud controller project but also update this as a seperate entity so it can run stand alone. 
 
 currently, due to the nature of being able to dynamically map leds from querries I have been using this to handle lighting in my house with that application and have added in additional routes for different ways to assign and handle color assignment/animations. This project exists so I do not have to actively plug in my ESP to a computer to change animation cycles, a feat you can reach with OTA workflows and ESP Home. This just avoids re programming as its assignment by querry and not by the written code on the ESP itself and has a lot of work till its optimized well enough to warrant attention.
 
